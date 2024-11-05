@@ -27,7 +27,7 @@ void main() {
 // Definiamo una classe chiamata GDGKeep che estende StatefulWidget.
 class GDGKeep extends StatefulWidget {
 
-  // Definiamo un costruttore costante che accetta un parametro opzionale 'key'.
+  // Definiamo un costruttore costante che accetta un parametro opzionale 'key' a causa della presenza delle parentesi graffe.
   // 'super.key' passa il parametro al costruttore della classe madre (StatefulWidget).
   // Il costruttore 'const' indica che questa classe può essere immutabile,
   // migliorando l'efficienza quando il widget viene ricostruito.
@@ -45,21 +45,23 @@ class _GDGKeepState extends State<GDGKeep> {
 
   // Creiamo una Lista di tipo GDGNote che conterrà tutte le note dentro al file json nella directory assets/json/
   // GDGNote è un modello astratto di dati che contiene una singola istanza di una nostra nota (vedere il file gdg_note.dart nella directory lib/models/ per dettagli sulla classe)
-  List<GDGNote> list = [];
+  // Le variabili che iniziano con _ (underscore o trattino basso) vengono definite variabili private ovvero delle variabili che possono essere lette e modificate solo all'interno della classe
+  List<GDGNote> _list = [];
 
   // Variabile di tipo booleano per capire se il sistema è in fase di caricamento del json o ha ultimato la procedura in modo da poter renderizzare la UI
   bool _isLoading = true;
   // Variabile di tipo intero che definisce il numero di colonne standard da visualizzare nella nostra lista di note
-  int columns = 4;
+  int _columns = 4;
   // Variabile di tipo double che contiene la larghezza del nostro schermo. Successivamente verrà popolata col valore corretto. Intanto la inizializziamo a 0.
-  double screenWidth = 0;
+  double _screenWidth = 0;
 
   // initState è un metodo che viene lanciato quando lo stato del Widget viene creato o più semplicemente prima che il Widget venga costruito
   @override
   void initState() {
-    // Le implementazioni di questo metodo dovrebbero iniziare con una chiamata al metodo ereditato, come in super.initState()
+    // Questa riga richiama l'implementazione del metodo initState nella classe madre, o superclasse, State.
+    // Permette a Flutter di completare eventuali configurazioni necessarie prima di eseguire qualsiasi altra operazione specifica del widget
     super.initState();
-    // metodo per caricare il json all'interno della Lista precedentemente dichiarata (vedi sotto per il codice del metodo)
+    // Metodo per caricare il json all'interno della Lista precedentemente dichiarata (vedi sotto per il codice del metodo)
     _loadJson();
   }
 
@@ -72,16 +74,16 @@ class _GDGKeepState extends State<GDGKeep> {
     // Utilizziamo la variabile screenWidth precedentemente creata per salvare le dimensioni in larghezza dello schermo
     // Tramite la classe MediaQuery (pensate vagamente a quelle dei CSS) ed il context riusciamo ad accedere ai valori dei getter size e width.
     // Un getter è una funzione speciale in programmazione che consente di ottenere (o "recuperare") il valore di una proprietà di un oggetto.
-    screenWidth = MediaQuery.of(context).size.width;
+    _screenWidth = MediaQuery.sizeOf(context).width;
 
     // Impostiamo la variabile columns a 1, 2 o 4 in base alla larghezza dello schermo. Questo ci permette di rendere responsive l'applicazione.
     // Per responsive si intende un'app che adatta la sua UI in base alle dimensioni dello schermo
-    if (screenWidth < 800) {
-      columns = 1;
-    } else if (screenWidth < 1200) {
-      columns = 2;
+    if (_screenWidth < 800) {
+      _columns = 1;
+    } else if (_screenWidth < 1200) {
+      _columns = 2;
     } else {
-      columns = 4;
+      _columns = 4;
     }
 
     // Il metodo si aspetta in ritorno (return) un Widget quindi partiamo con uno dei Widget base del Material Design ovvero lo Scaffold
@@ -108,7 +110,7 @@ class _GDGKeepState extends State<GDGKeep> {
             // Definiamo il custom Widget creato da noi chiamato TopBar() che conterrà logo e campo di ricerca (vedi file lib/widgets/top_bar.dart)
             const TopBar(),
             // Sotto alla TopBar() definiamo una Riga con a sinistra il menù ad elenco ed a destra il contenuto delle nostre note
-            // Il widget Expanded serve a controllare come uno o più widget figli occupino lo spazio disponibile in un widget genitore che ha un'area limitata.
+            // Il widget Expanded serve a controllare come uno o più widget figli occupino lo spazio disponibile in un widget genitore che ha un'area limitata. In questo caso i i figli della Row hanno una larghezza definita ma non l'altezza. Con Expanded andiamo ad occupare l'altezza disponibile.
             Expanded(
               // La riga o Row() è un Widget che allinea più elementi in orizzontale ed accetta quindi più figli come le Column
               child: Row(
@@ -119,7 +121,7 @@ class _GDGKeepState extends State<GDGKeep> {
                   // Custom Widget creato da noi con il menù a sinistra (vedi file lib/widgets/left_menu.dart)
                   const LeftMenu(),
                   // Custom Widget creato da noi che visualizza la lista delle note (vedi file lib/widgets/notes_grid_view.dart)
-                  NotesGridView(list: list, columns: columns),
+                  NotesGridView(list: _list, columns: _columns),
                 ],
               ),
             )
@@ -145,7 +147,7 @@ class _GDGKeepState extends State<GDGKeep> {
   }
 
   // Questo è il metodo che carica il JSON e simula il recupero di dati da un backend con un ritardo fittizio di due secondi.
-  // JSON sta per JavaScript Obect Notation. E' un formato standard aperto per lo scambio dei dati (https://en.wikipedia.org/wiki/JSON)
+  // JSON sta per JavaScript Object Notation. E' un formato standard aperto per lo scambio dei dati (https://en.wikipedia.org/wiki/JSON)
   // Future sta ad indicare un'operazione asincrona che verrà completata in un momento futuro. Per questo motivo, oltre alla parola Future ed il nome del nostro metodo, aggiungiamo async prima delle parentesi graffe
   Future _loadJson() async {
     // await implica l'aspettare del compimento dell'operazione asincrona.
@@ -159,7 +161,7 @@ class _GDGKeepState extends State<GDGKeep> {
     // Per ogni elemento del json
     for (var singleValue in jsonResponse) {
       // Aggiungiamo alla lista chiamata list un oggetto di tipo GDGNote contenente i valori prelevati dal singolo oggetto nel json decodificato
-      list.add(GDGNote.fromJson(singleValue));
+      _list.add(GDGNote.fromJson(singleValue));
     }
     // Ricostruaimo l'interfaccia richiamando il metodo setState ed impostando la variabile _isLoading a false in quanto l'ipotetico reperimento dei dati è stato ultimato
     setState(() {

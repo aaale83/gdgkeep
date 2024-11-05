@@ -1,5 +1,5 @@
 // Questa classe rappresenta un custom widget della lista delle nostre note
-// Importiamo alucne librerie tra cui il pacchetto flutter_staggered_grid_view
+// Importiamo alcune librerie tra cui il pacchetto flutter_staggered_grid_view
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gdg_keep/models/gdg_note.dart';
@@ -12,7 +12,7 @@ class NotesGridView extends StatelessWidget {
   final List<GDGNote> list;
   final int columns;
 
-  // Tramite il costruttore obblighiamo tramite la parola required l'assegnazione di questi valori durante l'inizializzazione della classe
+  // Tramite il costruttore e l'utilizzo della parola required, obblighiamo l'assegnazione di questi valori durante l'inizializzazione della classe
   const NotesGridView({
     super.key,
     required this.list,
@@ -29,8 +29,9 @@ class NotesGridView extends StatelessWidget {
     // Per ottenere la larghezza della finestra dell'app viene usata la classe MediaQuery tramite il metodo sizeOf, il context e la proprietà width
     return SizedBox(
       width: MediaQuery.sizeOf(context).width - 300,
-      // Andiamo a visualizzare le note come un mosaico tramite il widget MansonryGridView del pacchetto flutter_staggered_grid_view importato
+      // Andiamo a visualizzare le note come un mosaico tramite il widget MansonryGridView del pacchetto flutter_staggered_grid_view importato precedentemente.
       // .count è comunemente utilizzato come convenzione nei nomi di alcuni costruttori per indicare che il widget creato avrà un numero specifico di elementi in un layout
+      // MasonryGridView utilizza il lazy loading ovvero vengono creati e resi visibili solo gli elementi attualmente presenti sullo schermo
       child: MasonryGridView.count(
         // Definiamo un animazione di scrolling
         physics: const BouncingScrollPhysics(),
@@ -57,7 +58,7 @@ class NotesGridView extends StatelessWidget {
             ),
             // All'interno del riquadro definiamo una colonna
             child: Column(
-                // Tutti gli elementi saranno all'ineati a sinistra
+                // Tutti gli elementi saranno allineati a sinistra
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // Definiamo gli elementi della colonna ovvero
                 children: [
