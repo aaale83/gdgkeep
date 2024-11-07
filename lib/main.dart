@@ -72,7 +72,7 @@ class _GDGKeepState extends State<GDGKeep> {
   Widget build(BuildContext context) {
 
     // Utilizziamo la variabile screenWidth precedentemente creata per salvare le dimensioni in larghezza dello schermo
-    // Tramite la classe MediaQuery (pensate vagamente a quelle dei CSS) ed il context riusciamo ad accedere ai valori dei getter size e width.
+    // Tramite la classe MediaQuery (pensate vagamente a quelle dei CSS) ed il context riusciamo ad accedere al valore del getter width (larghezza).
     // Un getter è una funzione speciale in programmazione che consente di ottenere (o "recuperare") il valore di una proprietà di un oggetto.
     _screenWidth = MediaQuery.sizeOf(context).width;
 
